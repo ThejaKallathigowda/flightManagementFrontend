@@ -1,0 +1,263 @@
+
+<div class="container">
+  <div class="p-3  bg-info text-white">
+
+    <div *ngIf="user">
+      <h1 style="font-style: oblique;">Welcome to CognizantAirTrip.com {{user.userName}}</h1>
+      <h4 style="font-style: oblique;">id: {{ user.userId }}</h4><br />
+
+
+    </div>
+  </div>
+  <br />
+  <br><br>
+
+  <div class="mb-2" align="center">
+    <div class="row">
+      <div class="col-3">
+        <button class="btn btn-secondary" (click)="getBookings()">View Bookings</button>
+      </div>
+
+      <div class="col-3">
+        <button class="btn btn-secondary" routerLink="/viewUser">view details</button>
+      </div>
+
+      <div class="col-3">
+        <button class="btn btn-secondary" routerLink="/updateUser">update details</button>
+      </div>
+
+      <div class="col-3">
+        <button class="btn btn-secondary" (click)="logout()">logout</button>
+      </div>
+    </div>
+  </div>
+  <br>
+  <br>
+
+  <div class="jumbotron mt-1" *ngIf="!found">
+
+    <div class="form-row">
+      <h3 class="text-warning col-md-5" style="font: bold; font-style: oblique;">Book Flight Tickets</h3>
+      <div class="col-md-5 text-warning" style="font: bold; font-style: oblique; font-size:large;">
+        <label>
+          <h3> TripType: </h3>
+        </label>
+
+        <select #id (click)="type(id.value)">
+          <option value=''> select </option>
+          <option value='oneway'> oneway </option>
+          <option value='roundtrip'>roundtrip </option>
+        </select>
+      </div>
+    </div>
+
+    <br><br>
+    <div *ngIf="oneWay">
+
+      <form [formGroup]="searchForm1" (ngSubmit)="search()">
+
+
+        <div class="form-row">
+
+          <div class="form-group col-md-3">
+            <label for="dep">From</label>
+            <input type="text" [class.is-invalid]="
+              searchForm1.get('departureAirport').invalid &&
+              searchForm1.get('departureAirport').touched
+            " placeHolder="departure Airport" id="dep" class="form-control" formControlName="departureAirport" />
+            <small class="text-danger" *ngIf="
+              searchForm1.get('departureAirport').invalid &&
+              searchForm1.get('departureAirport').touched
+            ">*mandatory field</small>
+          </div>
+
+          <div class="form-group col-md-5">
+            <label for="ari">To</label>
+            <input type="text" [class.is-invalid]="
+              searchForm1.get('arrivalAirport').invalid &&
+              searchForm1.get('arrivalAirport').touched
+            " placeHolder="arrival Airport" id="ari" class="form-control" formControlName="arrivalAirport" />
+            <small class="text-danger" *ngIf="
+              searchForm1.get('arrivalAirport').invalid &&
+              searchForm1.get('arrivalAirport').touched
+            ">*mandatory field</small>
+          </div>
+
+          <div class="form-group col-md-2">
+            <label for="departdate">Date</label>
+            <input type="date" id="departdate" class="form-control" formControlName="departdate" />
+
+            <div *ngIf="
+              searchForm1.get('departdate').invalid && searchForm1.get('departdate').touched
+            ">
+              <small class="text-danger" *ngIf="searchForm1.get('departdate').errors?.dateError">*date must be greater
+                than
+                current date</small>
+            </div>
+          </div>
+        </div>
+        <div class="form-row">
+          <input [disabled]="!searchForm1.valid" type="submit" class="btn btn-success" value="Search" />
+        </div>
+      </form>
+    </div>
+    <div *ngIf="roundTrip">
+
+      <form [formGroup]="searchForm2" (ngSubmit)="search()">
+
+
+        <div class="form-row">
+
+          <div class="form-group col-md-3">
+            <label for="dep">From</label>
+            <input type="text" [class.is-invalid]="
+              searchForm2.get('departureAirport').invalid &&
+              searchForm2.get('departureAirport').touched
+            " placeHolder="departure Airport" id="dep" class="form-control" formControlName="departureAirport" />
+            <small class="text-danger" *ngIf="
+              searchForm2.get('departureAirport').invalid &&
+              searchForm2.get('departureAirport').touched
+            ">*mandatory field</small>
+          </div>
+
+          <div class="form-group col-md-3">
+            <label for="ari">To</label>
+            <input type="text" [class.is-invalid]="
+              searchForm2.get('arrivalAirport').invalid &&
+              searchForm2.get('arrivalAirport').touched
+            " placeHolder="arrival Airport" id="ari" class="form-control" formControlName="arrivalAirport" />
+            <small class="text-danger" *ngIf="
+              searchForm2.get('arrivalAirport').invalid &&
+              searchForm2.get('arrivalAirport').touched
+            ">*mandatory field</small>
+          </div>
+
+          <div class="form-group col-md-2">
+            <label for="departdate">Depart Date</label>
+            <input type="date" id="departdate" class="form-control" formControlName="departdate" />
+
+            <div *ngIf="
+              searchForm2.get('departdate').invalid && searchForm2.get('departdate').touched
+            ">
+              <small class="text-danger" *ngIf="searchForm2.get('departdate').errors?.dateError">*date must be greater
+                than
+                current date</small>
+            </div>
+          </div>
+          <div class="form-group col-md-2">
+            <label for="returndate">Return Date</label>
+            <input type="date" id="returndate" class="form-control" formControlName="returndate" />
+
+            <div *ngIf="
+              searchForm2.get('returndate').invalid && searchForm2.get('returndate').touched
+            ">
+              <small class="text-danger" *ngIf="searchForm2.get('returndate').errors?.arrivaldateError">*date must be
+                greater than
+                depart date</small>
+            </div>
+          </div>
+        </div>
+        <div class="form-row">
+          <input [disabled]="!searchForm2.valid" type="submit" class="btn btn-success" value="Search" />
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <h3 style="color:darkgreen; ">{{ notFound | lowercase }}</h3>
+
+  <!--
+  <div class="jumbotron" align="center" *ngIf="found">
+    
+    <div class="row">
+      <div class="col-6"><h4>Flight Number:</h4></div>
+      <div class="col-6"><h4>{{ flights.flightNumber }}</h4></div>
+    </div>
+
+    <div class="row">
+      <div class="col-6"><h4>From:</h4></div>
+      <div class="col-6"><h4>{{ flights.departureAirport }}</h4></div>
+    </div>
+
+    <div class="row">
+      <div class="col-6"><h4>To:</h4></div>
+      <div class="col-6"><h4>{{ flights.arrivalAirport }}</h4></div>
+    </div>
+
+    <div class="row">
+      <div class="col-6"><h4>Departure date:</h4></div>
+      <div class="col-6"><h4>{{ flights.departureDate }}</h4></div>
+    </div>
+
+    <div class="row">
+      <div class="col-6"><h4>Departure Time:</h4></div>
+      <div class="col-6"><h4>{{ flights.departureTime }}</h4></div>
+    </div>
+    
+    <div class="row">
+      <div class="col-6"><h4>Arrival Date:</h4></div>
+      <div class="col-6"><h4>{{ flights.arrivalDate }}</h4></div>
+    </div>
+
+    <div class="row">
+      <div class="col-6"><h4>Arrival Time:</h4></div>
+      <div class="col-6"><h4>{{ flights.arrivalTime }}</h4></div>
+    </div>
+
+    <div class="row">
+      <div class="col-6"><h4>Cost:</h4></div>
+      <div class="col-6"><h4>{{ flights.cost | currency:'INR' }}</h4></div>
+    </div><br><br>
+    -->
+
+
+</div>
+
+<div class="panel-body" *ngIf="found">
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Flight Number</th>
+        <th>From</th>
+        <th>To</th>
+        <th>Available Seats</th>
+        <th>Departure Date</th>
+        <th>Departure Time</th>
+        <th>Arrival Date</th>
+        <th>Arrival Time</th>
+        <th>Flight Vendor</th>
+        <th>Ticket Price</th>
+
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let flight of flights">
+        <td>{{flight.flightNumber}}</td>
+        <td>{{flight.departureAirport}}</td>
+        <td>{{flight.arrivalAirport}}</td>
+        <td>{{flight.availableSeats}}</td>
+        <td>{{flight.departureDate}}</td>
+        <td>{{flight.departureTime}}</td>
+        <td>{{flight.arrivalDate}}</td>
+        <td>{{flight.arrivalTime}}</td>
+        <td>{{flight.flightVendor}}</td>
+        <td>{{flight.cost | currency: 'INR'}}</td>
+        <!--<td><button  class="btn btn-danger" (click)="removeFlight(flight.flightNumber)" >Delete</button> &nbsp;
+              <button  class="btn btn-info" (click)="updateFlight(flight.flightNumber)" >Update</button>
+          </td>-->
+
+        <td *ngIf="addbtn">
+          <button class="btn btn-primary" (click)="addPassengers(flight.flightNumber)">add passengers</button>
+        </td>
+        <td *ngIf="!addbtn">
+          <button class="btn btn-warning" (click)="selectReturnFlight(flight.flightNumber)">Select Return Flight</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="text-center">
+    <button class="btn btn-dark col-md-3 " (click)="back()">Back</button>
+  </div>
+
+
+</div>
